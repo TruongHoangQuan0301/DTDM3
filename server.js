@@ -85,6 +85,16 @@ app.get("/api/logout", (req, res) => {
   });
 });
 
+app.get("/api/test-db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({ ok: true, time: result.rows[0].now });
+  } catch (err) {
+    res.json({ ok: false, error: err.message });
+  }
+});
+
+
 // Server start
 app.listen(process.env.PORT || 3000, () =>
   console.log("Server running with PostgreSQL session...")
