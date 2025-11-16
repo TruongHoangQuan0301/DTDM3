@@ -4,35 +4,98 @@ import pgSession from "connect-pg-simple";
 import bcrypt from "bcryptjs";
 import pool from "./db.js";
 import dotenv from "dotenv";
+import helmet from "helmet";
 dotenv.config();
 
 const app = express();
+
+// ========================================
+// 🔐 SECURITY HEADERS (Cloud-level Security)
+// ========================================
+if (process.env.SECURE_HEADERS === "true") {
+  app.use(helmet());
+  console.log("✔ Secure headers enabled");
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// ================= SESSION STORE =================
+// ========================================
+// 🔥 FIREWALL (Application-Level Firewall)
+// ========================================
+if (process.env.ENABLE_FIREWALL === "true") {
+  const allowed = process.env.ALLOWED_IPS?.split(",") || [];
+
+  app.use((req, res, next) => {
+    const ip = req.ip;
+
+    if (
+      !allowed.includes("0.0.0.0/0") &&   // allow all
+      !allowed.includes(ip)
+    ) {
+      console.log(`🚫 Blocked IP: ${ip}`);
+      return res.status(403).json({ error: "Blocked by Cloud Firewall" });
+    }
+
+    next();
+  });
+
+  console.log("✔ Firewall enabled");
+}
+
+// ========================================
+// 🔄 LOAD BALANCER SIMULATION
+// ========================================
+if (process.env.LB_STRATEGY === "round-robin") {
+  const servers = ["node-1", "node-2", "node-3"];
+  let index = 0;
+
+  app.use((req, res, next) => {
+    req.selectedServer = servers[index];
+    index = (index + 1) % servers.length;
+    next();
+  });
+
+  console.log("✔ Load balancer (round-robin) enabled");
+}
+
+// ========================================
+// 🧠 SESSION STORE — PostgreSQL
+// ========================================
 const PgSession = pgSession(session);
 
 app.use(
   session({
     store: new PgSession({
-      pool: pool,           // kết nối PostgreSQL
-      tableName: "session", // tên bảng session
-      createTableIfMissing: true, // tự tạo bảng nếu chưa có
+      pool: pool,
+      tableName: "session",
+      createTableIfMissing: true,
     }),
-    secret: "secret-key", // bạn có thể thay đổi
+    secret: "secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // session sống 7 ngày
-      secure: false, // Render free tier không bắt HTTPS
-    }
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: false,
+    },
   })
 );
 
-// ================= ROUTES =================
+// ========================================
+// 🩺 HEALTHCHECK (Cloud-style health check)
+// ========================================
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    server: req.selectedServer || "single",
+    timestamp: new Date(),
+  });
+});
+
+// ========================================
+// 📌 ROUTES
+// ========================================
 
 // API đăng ký
 app.post("/api/register", async (req, res) => {
@@ -85,6 +148,7 @@ app.get("/api/logout", (req, res) => {
   });
 });
 
+// TEST DB
 app.get("/api/test-db", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
@@ -94,8 +158,9 @@ app.get("/api/test-db", async (req, res) => {
   }
 });
 
-
-// Server start
+// ========================================
+// 🚀 START SERVER
+// ========================================
 app.listen(process.env.PORT || 3000, () =>
-  console.log("Server running with PostgreSQL session...")
+  console.log("Server running with Cloud Settings + PostgreSQL session...")
 );
