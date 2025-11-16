@@ -1,3 +1,8 @@
+/* ====== RESET ====== */
+* {
+  box-sizing: border-box;
+}
+
 /* ====== BACKGROUND ====== */
 body {
   font-family: Arial, sans-serif;
@@ -13,16 +18,17 @@ body {
 /* ====== FORM BOX ====== */
 .box {
   width: 380px;
-  padding: 30px;
+  padding: 35px 30px;
   background: #ffffff;
   box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
-  border-radius: 15px;
+  border-radius: 18px;
   animation: fadeIn 0.4s ease-out;
 }
 
+/* ====== TITLE ====== */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   color: #007bff;
   font-weight: bold;
 }
@@ -30,22 +36,22 @@ h2 {
 /* ====== INPUT ====== */
 input {
   width: 100%;
-  padding: 14px;
-  margin-top: 15px;
-  border-radius: 10px;
-  border: 1.8px solid #dcdcdc;
-  font-size: 15px;
-  transition: 0.25s ease;
+  padding: 15px 18px;
+  margin: 15px 0;         /* FIX: giúp input cách đều trên–dưới */
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  font-size: 16px;
+  transition: all 0.25s ease;
+  background: #fff;
 }
 
 input::placeholder {
-  color: #999;
-  font-size: 15px;
+  color: #a1a1a1;
 }
 
 input:focus {
   border-color: #4a9cff;
-  background: #f7fbff;
+  background: #f5faff;
   box-shadow: 0 0 6px rgba(66, 150, 255, 0.5);
   outline: none;
 }
@@ -53,13 +59,13 @@ input:focus {
 /* ====== BUTTON ====== */
 button {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   margin-top: 20px;
   background: #007bff;
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.25s ease;
@@ -71,21 +77,14 @@ button:hover {
   box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
 }
 
-/* ====== LINKS ====== */
+/* ====== LINK ====== */
 a {
   color: #005fcc;
   text-decoration: none;
-  transition: 0.2s;
 }
 
 a:hover {
   text-decoration: underline;
-}
-
-/* ====== LIST ITEMS (Trang index) ====== */
-#list li {
-  margin-bottom: 8px;
-  font-size: 14px;
 }
 
 /* ====== ANIMATION ====== */
