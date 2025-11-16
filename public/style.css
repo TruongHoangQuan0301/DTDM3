@@ -1,33 +1,77 @@
 body {
-  font-family: Arial;
-  background: #f2f2f2;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #6aa9ff, #a4d1ff);
   display: flex;
   justify-content: center;
   padding-top: 70px;
+  min-height: 100vh;
+  margin: 0;
 }
 
 .box {
   width: 380px;
   padding: 25px;
   background: white;
-  box-shadow: 0 0 10px #ccc;
-  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  animation: fadeIn 0.5s ease;
 }
 
 h2 {
   text-align: center;
+  margin-bottom: 15px;
+  color: #007bff;
+  font-weight: bold;
 }
 
-input, button {
+input {
   width: 100%;
   padding: 12px;
-  margin-top: 10px;
+  margin-top: 12px;
   border-radius: 7px;
   border: 1px solid #ccc;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
   background: #007bff;
   color: white;
   border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #005fcc;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #005fcc;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
