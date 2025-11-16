@@ -1,5 +1,6 @@
 import express from "express";
 import session from "express-session";
+import pgSession from "connect-pg-simple";
 import bcrypt from "bcryptjs";
 import pool from "./db.js";
 import dotenv from "dotenv";
@@ -11,20 +12,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// ================= SESSION STORE =================
+const PgSession = pgSession(session);
+
 app.use(
   session({
-    secret: "secret-key",
+    store: new PgSession({
+      pool: pool,           // kết nối PostgreSQL
+      tableName: "session", // tên bảng session
+      createTableIfMissing: true, // tự tạo bảng nếu chưa có
+    }),
+    secret: "secret-key", // bạn có thể thay đổi
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // session sống 7 ngày
+      secure: false, // Render free tier không bắt HTTPS
+    }
   })
 );
 
 // ================= ROUTES =================
 
-// Trang đăng ký
+// API đăng ký
 app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
-
   const hashed = await bcrypt.hash(password, 10);
 
   try {
@@ -38,7 +50,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Trang đăng nhập
+// API đăng nhập
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -57,22 +69,23 @@ app.post("/api/login", async (req, res) => {
     return res.json({ success: false, message: "Sai mật khẩu!" });
 
   req.session.user = user;
-
   res.json({ success: true });
 });
 
-// Trang index -> yêu cầu login
+// API lấy thông tin user
 app.get("/api/user", (req, res) => {
   if (!req.session.user) return res.json(null);
   res.json({ username: req.session.user.username });
 });
 
-// Logout
+// API logout
 app.get("/api/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/login.html"));
+  req.session.destroy(() => {
+    res.redirect("/login.html");
+  });
 });
 
 // Server start
 app.listen(process.env.PORT || 3000, () =>
-  console.log("Server running...")
+  console.log("Server running with PostgreSQL session...")
 );
