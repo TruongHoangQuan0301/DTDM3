@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="box">
+    <h2>Register</h2>
+    <p id="msg" style="color:green"></p>
+
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="registerUser()">Đăng ký</button>
+
+    <p>Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+  </div>
+
+  <script>
+    function registerUser() {
+      fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username.value,
+          password: password.value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        msg.innerText = data.message;
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: simple-auth-html
+    env: node
+    region: singapore
+    plan: free
+
+    buildCommand: "npm install"
+    startCommand: "npm start"
+
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: authdb
+          property: connectionString
+
+databases:
+  - name: authdb
+    plan: free
