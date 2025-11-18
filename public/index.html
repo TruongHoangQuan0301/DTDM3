@@ -7,7 +7,7 @@
   <div class="box">
     <h2 id="welcome">Welcome</h2>
 
-    <p>Dữ liệu API:</p>
+    <p>10Đ nha thầy ơi</p>
     <ul id="list"></ul>
 
     <br>
@@ -21,13 +21,6 @@
       .then(user => {
         if (!user) window.location = "login.html";
         else welcome.innerText = "Welcome " + user.username;
-      });
-
-    // Gọi API demo
-    fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
-      .then(res => res.json())
-      .then(data => {
-        list.innerHTML = data.map(x => `<li>${x.title}</li>`).join("");
       });
   </script>
 </body>
